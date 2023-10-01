@@ -1,0 +1,103 @@
+const User = require("../models/User");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+async function login(req, res) {
+  const user = await User.findOne({
+    $or: [{ email: req.body.email }],
+  });
+  if (user) {
+    checkPass = await bcrypt.compare(req.body.password, user.password);
+
+    if (checkPass) {
+      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET_KEY, { expiresIn: "10h" });
+      user._doc.token = token;
+
+      return res.status(201).json(user);
+    }
+  } else {
+    return res.status(401).send({ message: "Incorrect Credentials" });
+  }
+}
+
+async function logout(req, res) {
+  res.clearCookie("token");
+  console.log("logged out successfully");
+  res.json({ message: "Logged out successfully" });
+}
+
+// Listar todos los usuarios.
+async function index(req, res) {
+  try {
+    const users = await User.find();
+    return res.status(201).json(users);
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+// Mostrar un usuario específico.
+async function show(req, res) {
+  const username = req.params.username; // Obtén el nombre de usuario desde los parámetros de la URL
+  try {
+    const user = await User.findOne({ username }); // Busca el usuario por el nombre de usuario
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    return res.status(201).json(user);
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+// Almacenar un nuevo usuario.
+async function store(req, res) {
+  const { firstname, lastname, email, password } = req.body;
+  try {
+    const newUser = new User({ firstname, lastname, email, password });
+    await newUser.save();
+    return res.status(201).json(newUser);
+  } catch (error) {
+    res.status(400).json({ error: "Bad request" });
+  }
+}
+
+// Actualizar un usuario existente.
+async function update(req, res) {
+  const userId = req.params.id;
+  const { firstname, lastname, email, password } = req.body;
+  try {
+    const user = await User.findByIdAndUpdate(userId, { firstname, lastname, email, password });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    return res.json({ message: "User updated successfully" });
+  } catch (error) {
+    res.status(400).json({ error: "Bad request" });
+  }
+}
+
+// Eliminar un usuario.
+async function destroy(req, res) {
+  const userId = req.params.id;
+  try {
+    const user = await User.findByIdAndRemove(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    return res.json({ message: "User deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+// Exportar los métodos del controlador.
+module.exports = {
+  index,
+  show,
+  store,
+  update,
+  destroy,
+  login,
+  logout,
+};
