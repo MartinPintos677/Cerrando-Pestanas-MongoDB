@@ -56,12 +56,10 @@ async function destroy(req, res) {
 async function getCommentsByArticle(req, res) {
   const articleId = req.params.articleId;
   try {
-    const article = await Article.findById(articleId).populate("comments");
-    if (article) {
-      res.json(article.comments); // Cambia "Comments" a "comments"
-    } else {
-      res.status(404).json({ error: "Artículo no encontrado" });
-    }
+    // Buscar todos los comentarios que tengan una referencia al artículo específico
+    const comments = await Comment.find({ article: articleId });
+
+    res.json(comments);
   } catch (error) {
     res.status(500).json({ error: "Error al obtener los comentarios del artículo" });
   }

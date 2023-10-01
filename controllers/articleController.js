@@ -16,7 +16,7 @@ async function index(req, res) {
 async function show(req, res) {
   const articleId = req.params.id;
   try {
-    const article = await Article.findById(articleId).populate("User");
+    const article = await Article.findById(articleId).populate("user");
     if (!article) {
       return res.status(404).json({ error: "Artículo no encontrado" });
     }
