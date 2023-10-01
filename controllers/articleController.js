@@ -1,5 +1,5 @@
 const User = require("../models/User");
-const Article = require("../models/Articles");
+const Article = require("../models/Article");
 const formidable = require("formidable");
 
 // Mostrar una lista de recursos.

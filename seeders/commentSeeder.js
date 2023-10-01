@@ -1,5 +1,5 @@
-const Article = require("../models/Articles");
-const Comment = require("../models/Comments");
+const Article = require("../models/Article");
+const Comment = require("../models/Comment");
 
 const commentsData = [
   {

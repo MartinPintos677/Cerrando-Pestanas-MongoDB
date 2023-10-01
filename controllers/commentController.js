@@ -1,5 +1,5 @@
-const Article = require("../models/Articles");
-const Comment = require("../models/Comments");
+const Article = require("../models/Article");
+const Comment = require("../models/Comment");
 
 // Mostrar una lista de recursos.
 async function index(req, res) {
@@ -56,9 +56,9 @@ async function destroy(req, res) {
 async function getCommentsByArticle(req, res) {
   const articleId = req.params.articleId;
   try {
-    const article = await Article.findById(articleId).populate("Comments");
+    const article = await Article.findById(articleId).populate("comments");
     if (article) {
-      res.json(article.Comments);
+      res.json(article.comments); // Cambia "Comments" a "comments"
     } else {
       res.status(404).json({ error: "Artículo no encontrado" });
     }

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const commentsController = require("../controllers/commentsController");
+const commentsController = require("../controllers/commentController");
 
 // Rutas relacionadas a los comentarios:
 
