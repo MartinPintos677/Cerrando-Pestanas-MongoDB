@@ -5,8 +5,8 @@ const formidable = require("formidable");
 // Mostrar una lista de recursos.
 async function index(req, res) {
   try {
-    const articles = await Article.find().populate("User");
-    return res.status(201).res.json(articles);
+    const articles = await Article.find().populate("user");
+    res.json(articles);
   } catch (error) {
     res.status(500).json({ error: "Error interno del servidor" });
   }
@@ -36,7 +36,7 @@ async function store(req, res) {
     });
 
     form.parse(req, async (err, fields, files) => {
-      const userId = req.user.id; // Puedes obtener el usuario actual desde la solicitud
+      const userId = req.user.id;
 
       const articleCreate = {
         title: fields.title,
