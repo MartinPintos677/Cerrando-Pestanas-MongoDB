@@ -52,9 +52,9 @@ async function show(req, res) {
 
 // Almacenar un nuevo usuario.
 async function store(req, res) {
-  const { firstname, lastname, email, password } = req.body;
+  const { firstname, lastname, username, email, password } = req.body;
   try {
-    const newUser = new User({ firstname, lastname, email, password });
+    const newUser = new User({ firstname, lastname, username, email, password });
     await newUser.save();
     return res.status(201).json(newUser);
   } catch (error) {
@@ -64,10 +64,20 @@ async function store(req, res) {
 
 // Actualizar un usuario existente.
 async function update(req, res) {
-  const userId = req.params.id;
-  const { firstname, lastname, email, password } = req.body;
+  const usernameParam = req.params.username;
+  const { firstname, lastname, newUsername, email, password } = req.body;
   try {
-    const user = await User.findByIdAndUpdate(userId, { firstname, lastname, email, password });
+    const user = await User.findOneAndUpdate(
+      { username: usernameParam },
+      {
+        // Utilizar 'usernameParam' para buscar el usuario
+        firstname,
+        lastname,
+        username: newUsername,
+        email,
+        password,
+      },
+    );
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }

@@ -106,7 +106,6 @@ async function destroy(req, res) {
 async function getArticlesByUser(req, res) {
   const userId = req.params.userId;
   try {
-    // Buscar todos los comentarios que tengan una referencia al artículo específico
     const articles = await Article.find({ user: userId });
 
     res.json(articles);
