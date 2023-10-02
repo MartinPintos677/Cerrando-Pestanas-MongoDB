@@ -3,20 +3,32 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 async function login(req, res) {
-  const user = await User.findOne({
-    $or: [{ email: req.body.email }],
-  });
-  if (user) {
-    checkPass = await bcrypt.compare(req.body.password, user.password);
+  try {
+    const user = await User.findOne({
+      $or: [{ email: req.body.email }],
+    });
 
-    if (checkPass) {
-      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET_KEY, { expiresIn: "10h" });
-      user._doc.token = token;
+    if (user) {
+      console.log("Hash almacenado en la base de datos:", user.password);
+      const checkPass = await bcrypt.compare(req.body.password, user.password);
 
-      return res.status(201).json(user);
+      console.log("Resultado de la comparación de contraseñas:", checkPass);
+
+      if (checkPass) {
+        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET_KEY, {
+          expiresIn: "10h",
+        });
+        user._doc.token = token;
+
+        return res.status(201).json(user);
+      } else {
+        return res.status(401).json({ error: "Credenciales incorrectas" });
+      }
+    } else {
+      return res.status(401).json({ error: "Credenciales incorrectas" });
     }
-  } else {
-    return res.status(401).send({ message: "Incorrect Credentials" });
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error" });
   }
 }
 

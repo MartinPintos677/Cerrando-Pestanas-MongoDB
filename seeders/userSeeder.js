@@ -1,5 +1,4 @@
 const User = require("../models/User");
-const bcrypt = require("bcryptjs");
 
 const usersData = [
   {
@@ -13,7 +12,7 @@ const usersData = [
     firstname: "Martin",
     lastname: "Borba",
     username: "MBorba",
-    email: "mgrillo@gmail.com",
+    email: "mborba@gmail.com",
     password: "123",
   },
   {
@@ -30,8 +29,6 @@ const seedUsers = async () => {
     console.log("Ejecutando seeder de usuarios...");
 
     for (const userData of usersData) {
-      const hashedPassword = await bcrypt.hash(userData.password, 10);
-      userData.password = hashedPassword;
       await User.create(userData);
     }
 
