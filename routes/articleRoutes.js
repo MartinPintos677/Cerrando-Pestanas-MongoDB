@@ -9,5 +9,6 @@ router.get("/article/:id", articleController.show);
 router.post("/article", articleController.store);
 router.patch("/article/:id", articleController.update);
 router.delete("/article/:id", articleController.destroy);
+router.get("/article/list/:userId", articleController.getArticlesByUser);
 
 module.exports = router;

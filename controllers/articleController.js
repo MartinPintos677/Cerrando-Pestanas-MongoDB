@@ -102,10 +102,24 @@ async function destroy(req, res) {
   }
 }
 
+// Obtener los artículos de un usuario específico.
+async function getArticlesByUser(req, res) {
+  const userId = req.params.userId;
+  try {
+    // Buscar todos los comentarios que tengan una referencia al artículo específico
+    const articles = await Article.find({ user: userId });
+
+    res.json(articles);
+  } catch (error) {
+    res.status(500).json({ error: "Error al obtener los comentarios del artículo" });
+  }
+}
+
 module.exports = {
   index,
   show,
   store,
   update,
   destroy,
+  getArticlesByUser,
 };
