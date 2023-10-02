@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 
 async function login(req, res) {
   try {
+    console.log(req.body.email);
+
     const user = await User.findOne({
       $or: [{ email: req.body.email }],
     });
@@ -22,10 +24,10 @@ async function login(req, res) {
 
         return res.status(201).json(user);
       } else {
-        return res.status(401).json({ error: "Credenciales incorrectas" });
+        return res.status(401).json({ error: "Invalid password" });
       }
     } else {
-      return res.status(401).json({ error: "Credenciales incorrectas" });
+      return res.status(401).json({ error: "User not found" });
     }
   } catch (error) {
     return res.status(500).json({ error: "Internal server error" });
