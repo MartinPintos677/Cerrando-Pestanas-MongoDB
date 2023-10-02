@@ -19,7 +19,7 @@ const usersData = [
     firstname: "User",
     lastname: "Name",
     username: "User",
-    email: "User@user.com",
+    email: "user@user.com",
     password: "123",
   },
 ];
